@@ -18,9 +18,13 @@ Verify our app runs as expected
 ```sh
 cd next-app && npm run dev
 ```
-Providing our app runs as expected we can now create a new GitHub repo and name it `netlify-cicd`
+Update our build command within `package.json`
+```js
+"build": "next build && next export"
+```
+This will create a new `out` folder containing our final deployable app.
 
-Commit our code to the repo we've just created
+Create a new GitHub repo and name it `netlify-cicd` and commit our code to the repo we've just created
 ```sh
 git add .
 git commit -m "starter application"
@@ -42,6 +46,13 @@ Create a 'New Site from Git' which includes three steps:
  * Build Command: You can specify the command you want Netlify to run when you push to the above branch. The default is npm run build.
  * Publish directory: You can specify which folder Netlify should use to host the website, e.g., public, dist, build. The default is public.
  * Advanced build settings: If the site needs environment variables to build, you can specify them by clicking on Show advanced and then the New Variable button.
+
+### Update our build options
+Update our build command
+```js
+npm run build 
+```
+
 
 Deploy logs can viewed at 'Site deploy in progress' and once this has finalized your site will be available at the generated URL :rocket:
 
