@@ -2,12 +2,10 @@
 __This guide sets up the following flow of events:__
 1. Creating a ~~gatsby~~ NextJS project and push it to your github repository.
 2. Hooking up Netflify to build and deploy your application.
-3. Making changes to our app and opening a new pull request.
-
-4. You push your branch to your GitHub repository and create a pull request.
-5. Netlify automatically creates a preview of the site with a unique URL that can be shared.
-6. Travis CI automatically builds the site in an isolated container and runs any declared tests.
-7. When all tests pass, you merge the PR into the repository’s master branch, which automatically triggers a deployment to your production Linode.
+3. Modify our app and opening a new pull request.
+4. Netlify automatically creates a preview of the site with a unique URL that can be shared.
+5. Travis CI automatically builds the site in an isolated container and runs any declared tests.
+6. When all tests pass, you merge the PR into the repository’s master branch, which automatically triggers a deployment to your production Linode.
 
 ## Create a NextJS application
 Generate a NextJS project and when prompted name it `netlify-cicd`
@@ -16,7 +14,7 @@ npx create-next-app
 ```
 Verify our app runs as expected
 ```sh
-cd next-app && npm run dev
+cd netlify-cicd && npm run dev
 ```
 Update our build command within `package.json`
 ```js
@@ -52,7 +50,10 @@ Update our build command
 ```js
 npm run build 
 ```
-
+And our publish directory to target the `out` that will be generated from our build
+```js
+out/
+```
 
 Deploy logs can viewed at 'Site deploy in progress' and once this has finalized your site will be available at the generated URL :rocket:
 
@@ -62,15 +63,76 @@ Create a new local branch
 git checkout -b "update/site-heading"
 ```
 
-In our `src/pages/index.js` update to our header tag to `<h1>Hello Netlify Preview</h1>`
+In our `pages/index.js` update to our page hero
+```html
+<div className='hero'>
+  <h1 className='title'>Welcome to Netlify Previews!</h1>
+  <p className='description'>
+    To get started, edit <code>pages/index.js</code> and save to reload.
+  </p>      
+</div>
+```
 
 Now we can commit our changes to our repo and open a new pull request to our master branch.
+```sh
+git add pages/index.js
+git commit -m "Updated Page Hero"
+git push origin update/site-heading
+```
 
 Netlify will watch our repository for opened pull requests and build and deploy a preview version of our app with all of our new changes. We can see this in the pull request checks.
 
+![Create a new site](https://raw.githubusercontent.com/EoinTraynor/netlify-cicd/master/demo_assets/PRChecks.png "Create a new site")
+
 This enables teammates to see exactly what changes have been made without having to pull down the branch locally or before it's merged to our master branch :sunglasses:
 
-
-
 > Status checks are based on external processes, such as continuous integration builds, which run for each push you make to a repository. You can see the pending, passing, or failing state of status checks next to individual commits in your pull request.
+
 > If status checks are required for a repository, the required status checks must pass before you can merge your branch into the protected branch. For more information, see "About required status checks."
+
+If we accept and merge our pull request netlify will automatically redeploy our live app!
+
+Continuous deployment ✅
+
+
+## Implementing Continuous Integration with Travis
+We want to setup a failing test in order to verify that Travis catches our failing build
+Let's begin by abstracting our hero markup out of `index.js` as new react component living within our components folder along with a 
+```sh
+touch components/hero.js
+```
+```js
+// components/hero.js
+import React from 'react'
+
+const Hero = ({ title, description }) => (
+  <div className='hero'>
+    <h1 className='title'>{title}</h1>
+    <p className='description'>
+      {description}
+    </p>      
+  </div>
+);
+
+export default Hero;
+```
+
+
+Create a Travis file
+```sh
+touch .travis.yml
+```
+Specify the following configuration
+```yml
+language: node_js
+
+node_js:
+  - "stable"
+
+before_script:
+  - "npm install"
+
+script:
+  - "npm run test"
+  - "npm run build" 
+```
