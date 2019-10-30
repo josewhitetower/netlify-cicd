@@ -115,7 +115,7 @@ Add two run scripts to our `package.json`
 "lint:fix": "eslint --ext .jsx,.js pages/ --fix"
 ```
 
-Head over to [travis-ci.org](https://travis-ci.org/dashboard) and authorize your github account
+Head over to [travis-ci.org](https://travis-ci.org/dashboard) and authorize your github account. Then activate your repository in your profile.
 
 Create a Travis file
 ```sh
