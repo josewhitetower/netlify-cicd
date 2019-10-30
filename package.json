@@ -5,11 +5,21 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build && next export",
-    "start": "next start"
+    "start": "next start",
+    "lint": "eslint --ext .jsx,.js pages/",
+    "lint:fix": "eslint --ext .jsx,.js pages/ --fix"
   },
   "dependencies": {
     "next": "9.1.1",
     "react": "16.11.0",
     "react-dom": "16.11.0"
+  },
+  "devDependencies": {
+    "eslint": "^6.6.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.16.0",
+    "eslint-plugin-react-hooks": "^1.7.0"
   }
 }

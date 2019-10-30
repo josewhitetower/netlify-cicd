@@ -30,7 +30,7 @@ git remote add origin https://github.com/your-username/netlify-cicd.git
 git push -u origin master
 ```
 
-## Hook up Netlify
+## Setup Continuous Deployment with Netlify
 Navigate to [Netlify](https://app.netlify.com/start) and login using your GitHub account
 
 Create a 'New Site from Git' which includes three steps:
@@ -86,9 +86,6 @@ Netlify will watch our repository for opened pull requests and build and deploy 
 
 This enables teammates to see exactly what changes have been made without having to pull down the branch locally or before it's merged to our master branch :sunglasses:
 
-> Status checks are based on external processes, such as continuous integration builds, which run for each push you make to a repository. You can see the pending, passing, or failing state of status checks next to individual commits in your pull request.
-
-> If status checks are required for a repository, the required status checks must pass before you can merge your branch into the protected branch. For more information, see "About required status checks."
 
 If we accept and merge our pull request netlify will automatically redeploy our live app!
 
@@ -96,27 +93,26 @@ Continuous deployment ✅
 
 
 ## Implementing Continuous Integration with Travis
-We want to setup a failing test in order to verify that Travis catches our failing build
-Let's begin by abstracting our hero markup out of `index.js` as new react component living within our components folder along with a 
+
+
+> Status checks are based on external processes, such as continuous integration builds, which run for each push you make to a repository. You can see the pending, passing, or failing state of status checks next to individual commits in your pull request.
+
+> If status checks are required for a repository, the required status checks must pass before you can merge your branch into the protected branch. For more information, see "About required status checks."
+ 
+We need to build a simple but realistic integration into our build. So in this case test to ensure our project satisfies some standard linting rules with [ESlint](https://eslint.org). 
+ 
 ```sh
-touch components/hero.js
-```
-```js
-// components/hero.js
-import React from 'react'
-
-const Hero = ({ title, description }) => (
-  <div className='hero'>
-    <h1 className='title'>{title}</h1>
-    <p className='description'>
-      {description}
-    </p>      
-  </div>
-);
-
-export default Hero;
+npm install eslint --save-dev
+./node_modules/.bin/eslint --init
 ```
 
+Add two run scripts to our `package.json`
+```json
+"lint": "eslint --ext .jsx,.js pages/",
+"lint:fix": "eslint --ext .jsx,.js pages/ --fix"
+```
+
+Head over to [travis-ci.org](https://travis-ci.org/dashboard) and authorize your github account
 
 Create a Travis file
 ```sh
