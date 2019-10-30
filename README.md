@@ -93,7 +93,10 @@ Continuous deployment ✅
 
 
 ## Implementing Continuous Integration with Travis
-
+Create a new local branch
+```sh
+git checkout -b "update/add-continuous-integration"
+```
 
 > Status checks are based on external processes, such as continuous integration builds, which run for each push you make to a repository. You can see the pending, passing, or failing state of status checks next to individual commits in your pull request.
 
@@ -112,7 +115,9 @@ Add two run scripts to our `package.json`
 "lint:fix": "eslint --ext .jsx,.js pages/ --fix"
 ```
 
-Head over to [travis-ci.org](https://travis-ci.org/dashboard) and authorize your github account
+Head over to [travis-ci.org](https://travis-ci.org/dashboard) and authorize your github account. Then activate your repository in your profile.
+
+[Enabling required status checks](https://help.github.com/en/github/administering-a-repository/enabling-required-status-checks) on our repo.
 
 Create a Travis file
 ```sh
@@ -132,3 +137,11 @@ script:
   - "npm run test"
   - "npm run build" 
 ```
+
+We should be seeing our build failing. This is expected 
+
+Resolve our linting errors 
+```sh
+npm run lint:fix
+```
+As well as this we will have to update the extension of our `pages/index` from `.js` to `.jsx`. And now we can push our changes again 
